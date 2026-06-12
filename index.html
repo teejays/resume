@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Talha Ansari - Resume</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80' font-family='sans-serif' font-weight='bold' text-anchor='middle' x='50' fill='%231e40af'>ta</text></svg>"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Print-specific styles - only what's essential */
+      @media print {
+        /* Override for pills in print version - hide background, show border */
+        .tag-pill {
+          background-color: transparent !important;
+          border: 1px solid #1e40af !important;
+          color: #1e40af !important;
+        }
+
+        /* Fix for skills line in print version */
+        .skill-line {
+          background-color: #e5e7eb !important;
+          border: 1px solid #d1d5db !important;
+          print-color-adjust: exact !important;
+          -webkit-print-color-adjust: exact !important;
+        }
+
+        /* Page setup */
+        @page {
+          size: letter;
+          margin: 0.5in 0.5in;
+        }
+
+        /* Classes for controlling page breaks */
+        .page-break-avoid {
+          page-break-inside: avoid;
+          break-inside: avoid;
+        }
+
+        .page-break-before {
+          page-break-before: always;
+          break-before: page;
+        }
+
+        .page-break-after {
+          page-break-after: always;
+          break-after: page;
+        }
+
+        /* Utility class to hide elements in print view */
+        .no-print {
+          display: none !important;
+        }
+
+        /* Keep headings with their content */
+        h2 {
+          page-break-after: avoid;
+          break-after: avoid;
+        }
+
+        /* Ensure backgrounds print */
+        .tag-pill {
+          border: 1px solid #1d4ed8 !important;
+        }
+        /* Ensure skill dots print correctly */
+        .skill-dot {
+          background-color: #1e40af !important;
+          border: 1px solid #1e3a8a !important;
+          print-color-adjust: exact !important;
+          -webkit-print-color-adjust: exact !important;
+        }
+        /* Text sizes for print */
+        .print-text-11 {
+          font-size: 11px !important;
+        }
+        /* Make sure all backgrounds print */
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        /* Hide password overlay when printing */
+        #password-overlay {
+          display: none !important;
+        }
+      }
+
+      /* Flexbox-based skill section styles */
+      .skill-container {
+        min-height: 60px;
+        margin-bottom: 2rem;
+      }
+
+      /* Skill line - horizontal bar */
+      .skill-line {
+        position: relative;
+        z-index: 1;
+        height: 0.25rem;
+        background-color: #e5e7eb;
+        border-radius: 9999px;
+      }
+
+      /* Container for skill dots and labels */
+      .skill-dots-container {
+        display: flex;
+        position: relative;
+        margin-top: 1rem;
+      }
+
+      /* Each skill column */
+      .skill-point {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+      }
+
+      /* Dots on the skill line */
+      .skill-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #1e40af;
+        border-radius: 50%;
+        position: absolute;
+        top: -22px; /* Position to center on the line */
+        z-index: 2;
+      }
+
+      /* Skill text label */
+      .skill-label {
+        text-align: center;
+        font-size: 10px;
+        font-weight: 500;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        width: 100%;
+        line-height: 1.2;
+      }
+
+      /* Login overlay styles */
+      #password-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #login-container {
+        max-width: 400px;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      #resume-content {
+        display: none;
+      }
+    </style>
+    <script>
+      // Resume data structure - all data in one place for easy management
+      const resumeData = {
+        summary:
+          "I love building products that humans use. I'm an engineering leader who stays hands-on (I still code) and thinks in product. Most recently Chief Product & Technology Officer at Thrivory, a B2B healthcare-payments platform. Previously founded Ongoku Inc. (revenue-positive, wound down) after 5 years at Devoted Health, one of the largest healthcare startups in the US. 15+ years of experience writing code, building products and teams.",
+
+        experience: [
+          // NOTE: The originalDefaultSummary is defined globally AFTER the resumeData object is fully defined.
+          {
+            company: "Thrivory",
+            title: "Chief Product & Technology Officer",
+            period: "Sep 2025 - May 2026",
+            location: "Washington, DC",
+            description:
+              "A Redesign Health company | B2B healthcare payments: factoring, invoicing, and payment workflows on healthcare receivables | 2026 Digital Health 100",
+            bullets: [
+              "Raised engineering and product productivity despite a reduced workforce, by streamlining processes and dev setups and safely integrating AI agents into the team's workflows: 250 PRs and ~1M lines of code shipped in 9 months, vs 3 PRs and ~5K lines in the prior 9 months.",
+              "Owned engineering, product, QA, and delivery end-to-end; supported Series A prep with technical materials and SOC2 groundwork.",
+              "Completed stalled Laravel 9→11 migration in ~3 months after 9 months of prior stagnation.",
+              "Enforced PHPStan Level 8 across the codebase and doubled test coverage (~300 new tests).",
+              "Migrated primary deployments from AWS EKS to Laravel Forge, cutting ~$2k/month in cost and operational complexity.",
+            ],
+            tags: [
+              "healthcare fintech",
+              "tech: PHP/Laravel, AWS",
+              "team: 5 people",
+            ],
+          },
+          {
+            company: "Ongoku Inc.",
+            title: "Founder, CTO",
+            period: "Apr 2024 - Dec 2025",
+            location: "Washington, DC",
+            description:
+              "ongoku.com | Schema-first backend framework: declare data models and business rules, generate the backend, APIs, and admin UI",
+            bullets: [
+              "Founded company, built MVP, and secured revenue-positive client relationships; wound down end of 2025.",
+              "Led team of 3 engineers while personally contributing 90% of core codebase and infrastructure.",
+              "Explored logic-driven workflows in AI-assisted code generation.",
+            ],
+            tags: ["startup: founder", "team: 4 people"],
+          },
+          {
+            company: "Devoted Health",
+            title: "Principal Software Engineer",
+            location: "Boston, MA / Remote",
+            period: "Feb 2019 - Apr 2024",
+            description:
+              "All-in-one healthcare | Biggest healthcare startup in the US",
+            bullets: [
+              "Built in-house, code-gen web framework that 10x'd developer productivity for team of 70+ engineers.",
+              "Architected and launched the automated claims engine to process claims ~35% faster than industry average.",
+              "Led the re-architecture of core backend systems to safely handle 100x growth from 2,000 to 200,000+ members.",
+              "Mentored 15+ junior and mid-level engineers through technical reviews and pair programming sessions.",
+            ],
+            tags: [
+              "healthcare",
+              "tech: backend, golang",
+              "team: 70+ engineers",
+              "senior → staff → principal",
+            ],
+          },
+          {
+            company: "Next Jump",
+            title: "Senior Software Engineer | Team Lead",
+            location: "New York City, NY",
+            period: "Mar 2015 - Feb 2019",
+            description:
+              "Perksatwork.com | E-commerce and employee perks platform",
+            bullets: [
+              "Led a team of 5 to develop ultra-low-latency user profile service for 5 million users, achieving 99.99% uptime and 30ms average response time.",
+              "Architected automated, intelligent email campaign system boosting marketing response rates by 22% year-over-year.",
+              "Implemented SAML-based SSO authentication for multi-organization support, expanding platform to 150+ enterprise clients.",
+              "Captained recruiting event with 60 candidates, 70 employees and 20 VIP guests, resulting in 15 successful technical hires.",
+            ],
+            tags: [
+              "tech: fullstack, golang",
+              "team: 20+ engineers, 5 direct reports",
+            ],
+          },
+          {
+            company: "HBO",
+            title: "DevOps Engineer",
+            location: "New York City, NY",
+            period: "Jun 2012 - Dec 2012",
+            description: "HBO Go (currently known as HBO Max)",
+            bullets: [
+              "Implemented Splunk dashboards and automated log rotation for HBO Go servers, reducing incident response time by 40%.",
+            ],
+            tags: ["tech: devops"],
+          },
+          {
+            company: "1 Doc Way",
+            title: "Developer Intern",
+            location: "New York City, NY",
+            period: "Dec 2012 - Mar 2013",
+            description:
+              "Early-stage tele-psychiatry SaaS connecting patients with psychiatrists online",
+            bullets: [
+              "Helped migrate the platform from Python to Ruby on Rails, supporting 2,000+ patient consultations during beta phase.",
+            ],
+            tags: ["startup: early employee", "healthcare", "tech: fullstack"],
+          },
+        ],
+
+        otherEngagements: [
+          {
+            company: "Bylt Inc.",
+            role: "Advisor + Fractional CTO",
+            period: "Mar 2025 - Jun 2025",
+            description:
+              "Proptech | Connecting home owners with contractors. Built the MVP end-to-end, then handed off to the team.",
+            tags: ["startup: advisor", "fractional CTO"],
+          },
+        ],
+
+        education: [
+          {
+            school: "Columbia University",
+            degree: "Master's of Science in Electrical & Computer Engineering",
+            period: "2013 - 2014",
+            bullets: [],
+            tags: [
+              "GPA 3.6",
+              "student government",
+              "international house: resident member",
+            ],
+          },
+          {
+            school: "Middlebury College",
+            degree: "Bachelor of Arts",
+            period: "2008 - 2012",
+            bullets: [
+              "Physics Thesis: SR830 lock-in amplifier deviations from Butterworth-Filter model.",
+              "Teaching Assistant for physics and computer science courses.",
+            ],
+            tags: ["GPA 3.5", "major: physics, economics", "minor: math"],
+          },
+        ],
+
+        researchProjects: [
+          {
+            title: "The curious case of the SR830",
+            period: "Jan 2012 - June 2012",
+            description:
+              "Documenting and explaining the deviations of the SR830 lock-in amplifier from a Butterworth-filter based theoretical model.",
+            bullets: [
+              "Designed and built a computer-controlled calibration system for the SR830 lock-in amplifier, improving measurement accuracy by 15%.",
+              "Used LabVIEW for experimental control and signal processing.",
+              "Presented results at Middlebury’s Spring Symposium.",
+            ],
+          },
+          {
+            title:
+              "Perceptions of Pakistan’s socio-economic policies amongst U.S. Think Tanks",
+            period: "June 2011 - Dec 2011",
+            description:
+              "Consultancy research project for the Government of Pakistan.",
+            bullets: [
+              "Conducted surveys and interviews with U.S. think tanks to understand their perceptions of Pakistan’s socio-economic policies.",
+              "Analyzed survey data and interviewed think tank representatives to understand their perceptions of Pakistan’s socio-economic policies.",
+              "Presented results to the Prime Minister of Pakistan.",
+            ],
+          },
+          {
+            title: "In Trade We Trust",
+            period: "Sept 2010 - Dec 2010",
+            description: "Economics research project at Middlebury College.",
+            bullets: [
+              "Co-authored paper on the impact of international trade on economic growth in developing countries.",
+            ],
+          },
+          {
+            title: "Documenting Price Puzzle in Pakistan",
+            period: "July 2010 - Sept 2010",
+            description:
+              "Economics research project at The State Bank of Pakistan.",
+            bullets: [
+              "Documented and explored the (unexpected) positive responses of inflationary indexes to a positive monetary policy shocks.",
+            ],
+          },
+        ],
+
+        teachingExperience: [
+          {
+            institution: "Technical Leadership",
+            role: "Mentor (Software Engineering)",
+            period: "2015 - present",
+            description:
+              "Mentorship of over 20+ junior engineers in software engineering.",
+            bullets: [
+              "Mentored 15+ junior and mid-level engineers through technical reviews and pair programming sessions.",
+              "Conducted over 5 technical workshops and sessions on emerging technologies and best practices in software engineering.",
+            ],
+            tags: ["Technical mentorship"],
+          },
+          {
+            institution: "Lettuce Bee Kids",
+            role: "Program Manager (Volunteer)",
+            period: "Jul 2013 - Aug 2013",
+            description:
+              "Non-profit reintegrating street children in Islamabad, Pakistan through education and art. Designed an 8-week Math, English & Geography curriculum for 35 students and managed 10-20 volunteer teachers.",
+            bullets: [],
+            tags: ["Volunteer", "Non-profit"],
+          },
+          {
+            institution: "Columbia University",
+            role: "Teaching Assistant",
+            period: "Jan 2014 - May 2014",
+            description: "Computer Science: Analysis of Algorithms.",
+            bullets: [],
+            tags: ["Teaching Assistant", "Computer Science"],
+          },
+          {
+            institution: "Middlebury College",
+            role: "Teaching Assistant",
+            period: "Jan 2012 - May 2012",
+            description: "Physics: Intro Electricity & Magnetism.",
+            bullets: [],
+            tags: ["Teaching Assistant", "Physics"],
+          },
+          {
+            institution: "Middlebury College",
+            role: "Teaching Assistant",
+            period: "Jan 2012 - May 2012",
+            description: "Computer Science: Introduction to Comp Science.",
+            bullets: [],
+            tags: ["Teaching Assistant", "Computer Science"],
+          },
+        ],
+
+        skills: [
+          // Programming Languages
+          { name: "Golang", category: "", score: 8 },
+          { name: "TypeScript", category: "", score: 7 },
+          { name: "SQL", category: "", score: 6 },
+
+          // Tools
+          { name: "React", category: "", score: 7 },
+          { name: "Node.js", category: "", score: 5 },
+          { name: "AI Integrations", category: "", score: 6 },
+          { name: "PHP/Laravel", category: "", score: 4 },
+          { name: "DevOps", category: "", score: 4 },
+        ],
+
+        skillsDetail: {
+          "Languages & Technologies":
+            "Go, TypeScript, JavaScript, PHP, Python, GraphQL, REST APIs, SQL",
+          Frameworks:
+            "React, Next.js, Node.js, Express, tRPC, Laravel, Livewire",
+          "Infrastructure & Tools":
+            "AWS, GCP, Docker, Kubernetes, CI/CD (Github Actions), Terraform, Vercel",
+          Databases:
+            "PostgreSQL, MySQL, Redis, MongoDB, Elasticsearch, Vector DBs",
+          "Leadership Skills":
+            "Technical mentorship, Architecture design, Code reviews, Team leadership, Hiring/interviewing, Cross-functional collaboration",
+        },
+      };
+
+      // Helper function for rendering tags
+      function renderTags(tags) {
+        if (!tags || tags.length === 0) return "";
+
+        return `<div class="flex flex-wrap gap-1 mt-2">
+          ${tags
+            .map(
+              (tag) =>
+                `<span class="tag-pill inline-block px-2 py-0.5 text-[10px] font-medium text-blue-700 bg-blue-100 rounded-full">${tag}</span>`
+            )
+            .join("")}
+        </div>`;
+      }
+
+      // Helper function for rendering bullets
+      function renderBullets(bullets) {
+        if (!bullets || bullets.length === 0) return "";
+
+        if (bullets.length === 1) {
+          // For a single bullet, display as paragraph
+          return `<p class="text-sm mt-2 text-gray-500 font-normal">${bullets[0]}</p>`;
+        } else {
+          // For multiple bullets, display as list
+          return `
+            <ul class="list-disc list-inside mt-2 text-sm text-gray-500 font-normal">
+              ${bullets.map((bullet) => `<li>${bullet}</li>`).join("")}
+            </ul>
+          `;
+        }
+      }
+
+      // Generic section renderer
+      function renderSection(containerId, items, itemRenderer) {
+        const container = document.getElementById(containerId);
+        items.forEach((item) => {
+          container.innerHTML += itemRenderer(item);
+        });
+      }
+
+      // A unified renderer for experience, research project, teaching, education, and engagement items
+      function createUnifiedItemHTML(item) {
+        let mainTitle,
+          subTitle,
+          locationDisplay = "",
+          descriptionHTML = "",
+          bulletsHTML = "",
+          bottomMarginClass = "mb-8";
+
+        if (item.school && item.degree) {
+          // Education items
+          mainTitle = item.school;
+          subTitle = item.degree;
+          descriptionHTML = ""; // No description for education
+          bulletsHTML = renderBullets(item.bullets);
+          bottomMarginClass = "mb-6";
+        } else if (
+          item.company &&
+          item.role &&
+          typeof item.bullets === "undefined" &&
+          item.description !== undefined
+        ) {
+          // Advisory/Engagement items (distinguished by company, role, description, and NO bullets array)
+          mainTitle = item.company;
+          subTitle = item.role;
+          descriptionHTML = item.description
+            ? `<p class="text-xs text-gray-600 mt-1">${item.description}</p>`
+            : "";
+          bulletsHTML = ""; // No bullets for these advisory roles as per original renderEngagementItem
+          bottomMarginClass = "mb-4";
+        } else if (item.company && item.title) {
+          // Experience items
+          mainTitle = item.company;
+          subTitle = item.title;
+          locationDisplay = item.location ? ` | ${item.location}` : "";
+          descriptionHTML = item.description
+            ? `<p class="text-xs text-gray-600 mt-1">${item.description}</p>`
+            : "";
+          bulletsHTML = renderBullets(item.bullets);
+          bottomMarginClass = "mb-8";
+        } else if (item.institution && item.role) {
+          // Teaching/Mentoring items
+          mainTitle = item.institution;
+          subTitle = item.role;
+          descriptionHTML = item.description
+            ? `<p class="text-xs text-gray-600 mt-1">${item.description}</p>`
+            : "";
+          bulletsHTML = renderBullets(item.bullets);
+          bottomMarginClass = "mb-8";
+        } else if (
+          item.title &&
+          typeof item.company === "undefined" &&
+          typeof item.institution === "undefined"
+        ) {
+          // Research projects (distinguished by title, no company/institution)
+          mainTitle = item.title;
+          subTitle = null;
+          descriptionHTML = item.description
+            ? `<p class="text-xs text-gray-600 mt-1">${item.description}</p>`
+            : "";
+          bulletsHTML = renderBullets(item.bullets);
+          bottomMarginClass = "mb-8";
+        } else {
+          // Fallback for any items that didn't match the specific types above.
+          console.warn(
+            "Unhandled item type in createUnifiedItemHTML, using defaults:",
+            item
+          );
+          mainTitle =
+            item.title ||
+            item.company ||
+            item.institution ||
+            item.school ||
+            "Untitled Entry";
+          subTitle =
+            item.role ||
+            item.degree ||
+            (item.title && item.company ? item.title : null);
+          locationDisplay = item.location ? ` | ${item.location}` : "";
+          descriptionHTML = item.description
+            ? `<p class="text-xs text-gray-600 mt-1">${item.description}</p>`
+            : "";
+          bulletsHTML = renderBullets(item.bullets); // Render bullets if present by default
+          bottomMarginClass = "mb-8"; // Default margin
+        }
+
+        return `
+          <div class="${bottomMarginClass} page-break-avoid">
+            <h3 class="job-header text-lg font-semibold flex justify-between items-center">
+              <div>
+                ${mainTitle}
+                ${
+                  subTitle
+                    ? `<span class="text-sm text-gray-500 font-normal"> ${subTitle}${locationDisplay}</span>`
+                    : ""
+                }
+              </div>
+              <span class="date-display text-sm text-gray-500 font-normal">${
+                item.period
+              }</span>
+            </h3>
+            ${descriptionHTML}
+            ${renderTags(item.tags)}
+            ${bulletsHTML}
+          </div>
+        `;
+      }
+
+      // Function to render header with summary
+      function renderHeader() {
+        const container = document.getElementById("header-container");
+
+        container.innerHTML = `
+          <h1 class="text-5xl font-extrabold text-gray-900 text-center">Talha Ansari</h1>
+          <div class="flex justify-center flex-wrap gap-6 mt-6 text-sm text-gray-700">
+            <a href="mailto:hello@tansari.dev" class="flex items-center gap-1 text-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25H4.5a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0L12 13.5 2.25 6.75" />
+              </svg>
+              hello@tansari.dev
+            </a>
+            <span class="flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75l1.591-1.591a1.125 1.125 0 011.591 0L7.5 7.5a1.125 1.125 0 010 1.591L5.909 10.5m0 0l1.591 1.591a1.125 1.125 0 001.591 0L12 9.75l5.25 5.25a1.125 1.125 0 010 1.591l-2.25 2.25a1.125 1.125 0 01-1.591 0l-6.75-6.75z" />
+              </svg>
+              (802) 377-3556
+            </span>
+            <a href="https://github.com/teejays" class="flex items-center gap-1 text-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path d="M12 0C5.371 0 0 5.373 0 12c0 5.303 3.438 9.8 8.207 11.387.6.113.793-.262.793-.583 0-.287-.01-1.244-.015-2.255-3.338.726-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.744.083-.729.083-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.605-2.665-.305-5.466-1.336-5.466-5.932 0-1.31.469-2.381 1.236-3.221-.124-.304-.536-1.524.117-3.176 0 0 1.008-.323 3.301 1.23a11.51 11.51 0 013.003-.404 11.51 11.51 0 013.003.404c2.292-1.553 3.298-1.23 3.298-1.23.655 1.653.243 2.872.12 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.803 5.625-5.475 5.921.43.372.823 1.104.823 2.222 0 1.604-.015 2.896-.015 3.293 0 .324.192.699.8.58C20.565 21.795 24 17.298 24 12c0-6.627-5.373-12-12-12z" stroke="none" fill="currentColor" />
+              </svg>
+              github.com/teejays
+            </a>
+            <a href="https://linkedin.com/in/talhajansari" class="flex items-center gap-1 text-gray-700">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <path d="M4.983 3.5C4.983 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.983 2.12 4.983 3.5zM0 8h5v16H0V8zm7.5 0h4.7v2.3h.1c.7-1.3 2.4-2.6 5-2.6 5.3 0 6.3 3.5 6.3 8v9.3h-5V17c0-2.1-.04-4.8-3-4.8-3 0-3.5 2.3-3.5 4.6v7.2h-5V8z" stroke="none" fill="currentColor" />
+              </svg>
+              linkedin.com/in/talhajansari
+            </a>
+            <span class="flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              </svg>
+              Washington, DC
+            </span>
+          </div>
+          <p class="text-sm text-gray-700 mb-6 mt-6">${resumeData.summary}</p>
+        `;
+      }
+
+      // Function to render skills section
+      function renderSkills() {
+        const container = document.getElementById("skills-container");
+
+        // Initialize empty container
+        container.innerHTML = "";
+
+        // Group skills by category
+        const skillsByCategory = {};
+        resumeData.skills.forEach((skill) => {
+          if (!skillsByCategory[skill.category]) {
+            skillsByCategory[skill.category] = [];
+          }
+          skillsByCategory[skill.category].push(skill);
+        });
+
+        // Render each category
+        Object.entries(skillsByCategory).forEach(([category, skills]) => {
+          // Group skills by score for the visualization
+          const skillsByScore = {};
+          skills.forEach((skill) => {
+            if (!skillsByScore[skill.score]) {
+              skillsByScore[skill.score] = [];
+            }
+            skillsByScore[skill.score].push(skill.name);
+          });
+
+          container.innerHTML += `
+            <div class="mb-8 page-break-avoid">
+              <h3 class="text-lg font-semibold mb-2">${category}</h3>
+              <div class="skill-container">
+                <!-- Header labels -->
+                <div class="flex justify-between mb-2">
+                  <span class="text-[9px] text-gray-500">Moderate Experience</span>
+                  <span class="text-[9px] text-gray-500 ml-auto">Significant Experience</span>
+                </div>
+                
+                <!-- Skill line with dots -->
+                <div class="w-full h-1 bg-gray-200 rounded-full skill-line"></div>
+                
+                <!-- Skill content using flexbox -->
+                <div class="skill-dots-container">
+                  ${(() => {
+                    // Array of 10 skill level positions (1-10)
+                    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                      .map((position) => {
+                        const score = position.toString();
+                        const hasSkills = skillsByScore[score];
+                        const label = hasSkills
+                          ? skillsByScore[score].join(", ")
+                          : "";
+
+                        // Only render dot and label if skills exist at this level
+                        return `
+                        <div class="skill-point">
+                          ${hasSkills ? `<div class="skill-dot"></div>` : ""}
+                          ${
+                            hasSkills
+                              ? `<div class="skill-label">${label}</div>`
+                              : ""
+                          }
+                        </div>
+                      `;
+                      })
+                      .join("");
+                  })()}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      // Function to render all skills
+      function renderAllSkills() {
+        const container = document.getElementById("all-skills-container");
+
+        container.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            ${Object.entries(resumeData.skillsDetail)
+              .map(
+                ([category, skills]) => `
+              <div>
+                <h3 class="text-md font-semibold mb-2">${category}</h3>
+                <p class="text-sm text-gray-600">${skills}</p>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `;
+      }
+
+      const originalDefaultSummary = resumeData.summary; // Store initial default summary
+
+      // --- Configuration Modal Logic ---
+      const resumeConfigKey = "resumeSectionVisibility";
+      const resumeSummaryKey = "resumeCustomSummary";
+      const resumeSectionsConfig = [
+        {
+          id: "section-experience",
+          label: "Experience",
+          defaultVisible: true,
+          containerId: "experience-container",
+          dataKey: "experience",
+          renderer: createUnifiedItemHTML,
+        },
+        {
+          id: "section-education",
+          label: "Education",
+          defaultVisible: true,
+          containerId: "education-container",
+          dataKey: "education",
+          renderer: createUnifiedItemHTML,
+        },
+        {
+          id: "section-skills-overview",
+          label: "Skills Overview",
+          defaultVisible: true,
+          containerId: "skills-container",
+          customRenderFunc: renderSkills,
+        },
+        {
+          id: "section-technical-competencies",
+          label: "Technical Competencies",
+          defaultVisible: true,
+          containerId: "all-skills-container",
+          customRenderFunc: renderAllSkills,
+        },
+        {
+          id: "section-advisory-roles",
+          label: "Advisory Roles",
+          defaultVisible: true,
+          containerId: "advisory-roles-container",
+          dataKey: "otherEngagements",
+          renderer: createUnifiedItemHTML,
+        },
+        {
+          id: "section-research-projects",
+          label: "Research Projects",
+          defaultVisible: false,
+          containerId: "research-projects-container",
+          dataKey: "researchProjects",
+          renderer: createUnifiedItemHTML,
+        },
+        {
+          id: "section-teaching-mentoring",
+          label: "Teaching & Mentoring",
+          defaultVisible: false,
+          containerId: "teaching-experience-container",
+          dataKey: "teachingExperience",
+          renderer: createUnifiedItemHTML,
+        },
+      ];
+
+      let configModal,
+        closeConfigModalButton,
+        applyConfigButton,
+        configOptionsContainer,
+        configIconButton,
+        summaryTextarea,
+        resetConfigButton;
+
+      function initializeModalDOMElements() {
+        configModal = document.getElementById("config-modal");
+        closeConfigModalButton = document.getElementById("close-config-modal");
+        applyConfigButton = document.getElementById("apply-config-button");
+        configOptionsContainer = document.getElementById("config-options");
+        configIconButton = document.getElementById("config-icon-button");
+        summaryTextarea = document.getElementById("custom-summary-text");
+        resetConfigButton = document.getElementById("reset-config-button");
+
+        if (closeConfigModalButton) {
+          closeConfigModalButton.addEventListener("click", () =>
+            toggleConfigModal(false)
+          );
+        }
+
+        if (applyConfigButton) {
+          applyConfigButton.addEventListener("click", () => {
+            const newSettings = {};
+            resumeSectionsConfig.forEach((section) => {
+              const checkbox = document.getElementById(`toggle-${section.id}`);
+              if (checkbox) {
+                newSettings[section.id] = checkbox.checked;
+              }
+            });
+            const currentUrl = new URL(window.location.href);
+            const params = currentUrl.searchParams;
+
+            // Section visibility (individual params for non-defaults)
+            resumeSectionsConfig.forEach(section => {
+              if (newSettings[section.id] !== section.defaultVisible) {
+                params.set(section.id, newSettings[section.id].toString());
+              } else {
+                params.delete(section.id);
+              }
+            });
+
+            // Custom summary
+            if (summaryTextarea) {
+              const newSummary = summaryTextarea.value;
+              if (newSummary.trim() === "" || newSummary === originalDefaultSummary) {
+                params.delete('custom_summary');
+              } else {
+                params.set('custom_summary', encodeURIComponent(newSummary));
+              }
+              resumeData.summary = newSummary; // Update in-memory data
+            }
+
+            window.history.replaceState({}, '', currentUrl.toString());
+            initResume();
+            toggleConfigModal(false);
+          });
+        }
+
+        if (resetConfigButton) {
+          resetConfigButton.addEventListener("click", () => {
+            // Reset section visibility checkboxes in the modal
+            resumeSectionsConfig.forEach((section) => {
+              const checkbox = document.getElementById(`toggle-${section.id}`);
+              if (checkbox) {
+                checkbox.checked = section.defaultVisible;
+              }
+            });
+            // Reset summary textarea in the modal
+            if (summaryTextarea) {
+              summaryTextarea.value = originalDefaultSummary;
+            }
+          });
+        }
+
+        if (configIconButton) {
+          configIconButton.addEventListener("click", () => {
+            if (sessionStorage.getItem("resume_authenticated") === "true") {
+              toggleConfigModal(true);
+            }
+          });
+        }
+      }
+
+      function getSectionVisibilitySettings() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const settings = {};
+        resumeSectionsConfig.forEach(section => {
+          const paramValue = urlParams.get(section.id);
+          if (paramValue !== null) {
+            settings[section.id] = paramValue === 'true';
+          } else {
+            settings[section.id] = section.defaultVisible;
+          }
+        });
+        return settings;
+      }
+
+      function isSectionVisible(sectionId) {
+        const settings = getSectionVisibilitySettings();
+        return settings[sectionId] !== undefined ? settings[sectionId] : true;
+      }
+
+      function populateConfigModal() {
+        if (!configOptionsContainer) return;
+        configOptionsContainer.innerHTML = "";
+        const currentSettings = getSectionVisibilitySettings();
+        resumeSectionsConfig.forEach((section) => {
+          const isChecked =
+            currentSettings[section.id] !== undefined
+              ? currentSettings[section.id]
+              : section.defaultVisible;
+          const div = document.createElement("div");
+          div.className = "flex items-center";
+          div.innerHTML = `
+            <input id="toggle-${section.id}" type="checkbox" data-section-id="${
+            section.id
+          }" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" ${
+            isChecked ? "checked" : ""
+          }>
+            <label for="toggle-${
+              section.id
+            }" class="ml-3 block text-sm text-gray-900">${section.label}</label>
+          `;
+          configOptionsContainer.appendChild(div);
+        });
+
+        // Populate summary textarea
+        if (summaryTextarea) {
+          summaryTextarea.value = resumeData.summary;
+        }
+      }
+
+      function toggleConfigModal(show) {
+        if (!configModal) return;
+        if (show) {
+          populateConfigModal();
+          configModal.classList.remove("hidden");
+          configModal.classList.add("flex");
+        } else {
+          configModal.classList.add("hidden");
+          configModal.classList.remove("flex");
+        }
+      }
+
+      // --- End Configuration Modal Logic ---
+
+      // Function to initialize the resume
+      function initResume() {
+        renderHeader(); // Header and summary are always visible for now.
+
+        resumeSectionsConfig.forEach((sectionConfig) => {
+          const sectionElement = document.getElementById(sectionConfig.id);
+          const containerElement = document.getElementById(
+            sectionConfig.containerId
+          );
+
+          if (!sectionElement || !containerElement) {
+            console.warn(
+              `HTML elements for section ${sectionConfig.id} or container ${sectionConfig.containerId} not found.`
+            );
+            return;
+          }
+
+          // Always clear container first to handle re-renders correctly
+          containerElement.innerHTML = "";
+
+          if (isSectionVisible(sectionConfig.id)) {
+            sectionElement.classList.remove("hidden");
+
+            if (sectionConfig.customRenderFunc) {
+              sectionConfig.customRenderFunc(); // e.g., renderSkills(), renderAllSkills()
+            } else if (sectionConfig.dataKey && sectionConfig.renderer) {
+              let itemsToRender = resumeData[sectionConfig.dataKey];
+              if (itemsToRender) {
+                // Check if data array exists
+                if (sectionConfig.dataFilter) {
+                  itemsToRender = sectionConfig.dataFilter(itemsToRender);
+                }
+                if (itemsToRender.length > 0) {
+                  renderSection(
+                    sectionConfig.containerId,
+                    itemsToRender,
+                    sectionConfig.renderer
+                  );
+                }
+              } else {
+                // If dataKey is defined in config but not in resumeData (e.g. researchProjects might be initially undefined)
+                // console.log(`Data for section ${sectionConfig.label} (${sectionConfig.dataKey}) is not available in resumeData.`);
+              }
+            }
+          } else {
+            sectionElement.classList.add("hidden");
+          }
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeModalDOMElements(); // Initialize modal DOM element variables once DOM is ready
+
+        // Password protection logic
+        const overlay = document.getElementById("password-overlay");
+        const resumeContent = document.getElementById("resume-content");
+        const loginForm = document.querySelector("#login-container form");
+        const passwordInput = document.querySelector("#login-container input");
+
+        // Check for password in URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlPassword = urlParams.get("password");
+
+        // Check if correct password is in URL or already entered in this session
+        const isAuthenticated = sessionStorage.getItem("resume_authenticated");
+        const correctPassword = "jupiter";
+
+        if (isAuthenticated === "true" || urlPassword === correctPassword) {
+          if (urlPassword === correctPassword) {
+            sessionStorage.setItem("resume_authenticated", "true");
+          }
+
+          overlay.style.display = "none";
+          resumeContent.style.display = "block";
+          resumeData.summary = originalDefaultSummary; // Reset to default
+          const urlSummaryOnInit = urlParams.get('custom_summary');
+          if (urlSummaryOnInit !== null) {
+            resumeData.summary = decodeURIComponent(urlSummaryOnInit);
+          }
+          initResume();
+          if (configIconButton) {
+            if (urlParams.get("config") === "true") {
+              configIconButton.style.display = "block";
+            } else {
+              configIconButton.style.display = "none";
+            }
+          }
+        } else {
+          // If not authenticated and trying to access config via URL, deny
+          if (urlParams.get("config") === "true") {
+            console.warn("Config access denied. Please authenticate first.");
+            // Optionally, remove the config param from URL to prevent re-triggering on failed login
+            // window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+          }
+        }
+
+        loginForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          // Password is correctPassword, defined above
+
+          if (passwordInput.value === correctPassword) {
+            // Store authentication in session storage (until browser is closed)
+            sessionStorage.setItem("resume_authenticated", "true");
+
+            // Hide overlay and show content
+            overlay.style.display = "none";
+            resumeContent.style.display = "block";
+
+            // Initialize resume content
+            const currentUrlParamsLogin = new URLSearchParams(window.location.search);
+            resumeData.summary = originalDefaultSummary; // Reset to default
+            const urlSummaryAfterLogin = currentUrlParamsLogin.get('custom_summary');
+            if (urlSummaryAfterLogin !== null) {
+              resumeData.summary = decodeURIComponent(urlSummaryAfterLogin);
+            }
+            initResume();
+            // Check for config URL param after successful manual login too
+            if (urlParams.get("config") === "true") {
+              if (configIconButton) {
+                configIconButton.style.display = "block";
+              }
+            } else {
+              if (configIconButton) {
+                configIconButton.style.display = "none";
+              }
+            }
+          } else {
+            alert("Incorrect password. Please try again.");
+            passwordInput.value = "";
+            passwordInput.focus();
+          }
+        });
+      });
+    </script>
+  </head>
+  <body class="font-sans text-gray-800 p-10">
+    <div id="password-overlay">
+      <div id="login-container">
+        <h2 class="text-lg font-bold tracking-wide border-b pb-2 mb-6">
+          Enter Password
+        </h2>
+        <form>
+          <input
+            type="password"
+            class="w-full p-2 mb-4 border border-gray-300 rounded-lg"
+            placeholder="Password"
+          />
+          <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+    <div id="resume-content">
+      <div id="header-container" class="mb-10">
+        <!-- Header content will be dynamically inserted here -->
+      </div>
+
+      <section id="section-experience" class="mb-12">
+        <h2 class="text-2xl font-bold tracking-wide border-b pb-2 mb-6">
+          Experience
+        </h2>
+
+        <div id="experience-container" class="space-y-8">
+          <!-- Experience items will be dynamically inserted here -->
+        </div>
+      </section>
+
+      <section id="section-education" class="mb-12">
+        <h2 class="text-2xl font-bold tracking-wide border-b pb-2 mb-6">
+          Education
+        </h2>
+
+        <div id="education-container" class="space-y-8">
+          <!-- Education items will be dynamically inserted here -->
+        </div>
+      </section>
+
+      <section id="section-skills-overview" class="mb-12 page-break-avoid">
+        <h2 class="text-2xl font-bold tracking-wide border-b pb-2 mb-6">
+          Skills Overview
+        </h2>
+
+        <div id="skills-container" class="space-y-8">
+          <!-- Skills will be dynamically inserted here -->
+        </div>
+      </section>
+
+      <section id="section-technical-competencies" class="mb-12">
+        <h2 class="text-2xl font-bold tracking-wide border-b pb-2 mb-6">
+          Technical Competencies
+        </h2>
+
+        <div id="all-skills-container" class="space-y-8">
+          <!-- Technical Competencies will be dynamically inserted here -->
+        </div>
+      </section>
+
+      <section id="section-advisory-roles" class="mb-12">
+        <h2 class="text-2xl font-bold tracking-wide border-b pb-2 mb-6">
+          Advisory Roles
+        </h2>
+
+        <div id="advisory-roles-container" class="space-y-8">
+          <!-- Advisory roles items will be dynamically inserted here -->
+        </div>
+      </section>
+
+      <section id="section-research-projects" class="mb-12">
+        <h2 class="text-2xl font-bold tracking-wide border-b pb-2 mb-6">
+          Research Projects
+        </h2>
+
+        <div id="research-projects-container" class="space-y-8">
+          <!-- Research projects will be dynamically inserted here -->
+        </div>
+      </section>
+
+      <section id="section-teaching-mentoring" class="mb-12">
+        <h2 class="text-2xl font-bold tracking-wide border-b pb-2 mb-6">
+          Teaching & Mentoring Experience
+        </h2>
+
+        <div id="teaching-experience-container" class="space-y-8">
+          <!-- Teaching & Mentoring Experience will be dynamically inserted here -->
+        </div>
+      </section>
+
+      <!-- Debug metadata - only visible for debugging purposes -->
+      <div
+        class="text-xs text-gray-400 mt-10 pt-4 border-t border-gray-200"
+        id="debug-metadata"
+      >
+        <p class="text-right">Last updated: June 12, 2026</p>
+        <p class="text-right text-[9px]">Version: 1.0</p>
+      </div>
+    </div>
+
+    <script>
+      // Update the metadata with the current execution time
+      document.addEventListener("DOMContentLoaded", function () {
+        const debugMetadata = document.getElementById("debug-metadata");
+        if (debugMetadata) {
+          // Add URL parameters to debug info if requested via 'debug=true' parameter
+          const urlParams = new URLSearchParams(window.location.search);
+          if (urlParams.get("debug") === "true") {
+            debugMetadata.style.display = "block";
+            const execTime = new Date().toISOString();
+            const timeElement = document.createElement("p");
+            timeElement.className = "text-right";
+            timeElement.textContent = "Execution time: " + execTime;
+            debugMetadata.appendChild(timeElement);
+          } else {
+            // Hide by default unless debug mode is enabled
+            debugMetadata.style.display = "none";
+          }
+        }
+      });
+    </script>
+    <!-- Config Icon Button -->
+    <button
+      id="config-icon-button"
+      class="fixed bottom-4 right-4 p-2 rounded-full text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 print:hidden no-print z-40 transition-colors duration-150 ease-in-out"
+      style="display: none"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        shape-rendering="geometricPrecision"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+        />
+      </svg>
+    </button>
+
+    <!-- Configuration Modal -->
+    <div
+      id="config-modal"
+      class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center p-4 z-50"
+    >
+      <div
+        class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] flex flex-col"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-semibold">Configuration</h2>
+          <button
+            id="close-config-modal"
+            class="text-gray-500 hover:text-gray-700 text-2xl leading-none"
+          >
+            &times;
+          </button>
+        </div>
+        <div id="config-options" class="space-y-3 mb-6 overflow-y-auto pr-2">
+          <!-- Checkboxes will be populated here by JavaScript -->
+        </div>
+        <!-- Custom Summary Textarea -->
+        <div class="mt-4 mb-6">
+          <label
+            for="custom-summary-text"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Custom Summary:</label
+          >
+          <textarea
+            id="custom-summary-text"
+            rows="4"
+            class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border border-gray-300 rounded-md p-2"
+          ></textarea>
+        </div>
+        <div
+          class="mt-auto pt-4 border-t border-gray-200 flex flex-col-reverse sm:flex-row sm:justify-end gap-2"
+        >
+          <button
+            id="reset-config-button"
+            class="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg"
+          >
+            Reset to Defaults
+          </button>
+          <button
+            id="apply-config-button"
+            class="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+          >
+            Apply & Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
